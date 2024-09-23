@@ -5,7 +5,7 @@ public class Main {
         Scanner ingresoTeclado = new Scanner(System.in);
         Persona persona = new Persona("", 0, "", 0);
         Alumno alumno = new Alumno("", 0, "", "", 0, 0);
-        Usuarios usuario = new Usuarios("",0, "", 0, "", "", "");
+        Usuarios usuario = new Usuarios("", 0, "", 0, "", "", "");
 
         System.out.println("ingrese su nombre ");
         String nombre = ingresoTeclado.nextLine();
@@ -29,34 +29,45 @@ public class Main {
         String cargo = ingresoTeclado.nextLine();
         usuario.setCargo(cargo);
 
-        if(!usuario.getCargo().equalsIgnoreCase("director")){
+        if (!usuario.getCargo().equalsIgnoreCase("director")) {
             System.out.println("ingrese su curso ");
             String curso = ingresoTeclado.nextLine();
             alumno.setCurso(curso);
         }
 
-        if(usuario.getCargo().equalsIgnoreCase("director")){
-            System.out.println("usted tiene acceso al sistema ");
-            try {
-                System.out.println("ingrese su usuario ");
-                System.out.println("**recuerde que debe ingresar minimo 6 caracteres**" );
-                String usua = ingresoTeclado.nextLine();
+        int intentos = 0;
+        boolean correctoUsuario = false;
 
-                if(usua.length() < 6){
-                    throw new Excepciones("el nombre del usuario debe tener al menos 6 caracteres");
+        while (intentos < 3 && !correctoUsuario) {
+            if (usuario.getCargo().equalsIgnoreCase("director")) {
+                System.out.println("usted tiene acceso al sistema ");
+                try {
+                    System.out.println("ingrese su usuario ");
+                    System.out.println("**recuerde que debe ingresar minimo 6 caracteres**");
+                    String usua = ingresoTeclado.nextLine();
+
+                    if (usua.length() < 6) {
+                        throw new Excepciones("el nombre del usuario debe tener al menos 6 caracteres");
+                    }
+                    usuario.setUsuario(usua);
+                    System.out.println("usuario correcto");
+                    correctoUsuario = true;
+
+                } catch (Excepciones excepciones) {
+                    intentos++;
+                    System.out.println("error " + excepciones.getMessage());
+                    if (intentos < 3) {
+                        System.out.println("intente nuevamente (intento " + (intentos + 1) + " de 3)");
+                    } else {
+                        System.out.println("usted ha superado el limite de intentos");
+                    }
                 }
-                usuario.setUsuario(usua);
-                System.out.println("usuario correcto");
-
-            }catch (Excepciones excepciones){
-                System.out.println("error " + excepciones.getMessage());
-
+            } else {
+                System.out.println("--------------------------");
+                System.out.println("no tiene acceso al sistema");
+                System.out.println("--------------------------");
+                break;
             }
-
-        }else {
-            System.out.println("--------------------------");
-            System.out.println("no tiene acceso al sistema");
-            System.out.println("--------------------------");
         }
 
         System.out.println("\n");
@@ -72,17 +83,17 @@ public class Main {
         System.out.println("su cargo es: " + usuario.getCargo());
         System.out.println("--------------------------");
 
-        if(!usuario.getCargo().equalsIgnoreCase("director")){
+        if (!usuario.getCargo().equalsIgnoreCase("director")) {
             System.out.println("----------------------------------");
             System.out.println("el alumno pertenece al curso: " + alumno.getCurso());
             System.out.println("-----------------------------------");
         }
 
-        if(usuario.getCargo().equalsIgnoreCase("director")){
+        if (usuario.getCargo().equalsIgnoreCase("director")) {
             System.out.println("--------------------------");
             System.out.println("su usuario es " + usuario.getUsuario());
             System.out.println("--------------------------");
         }
 
-        }
     }
+}
